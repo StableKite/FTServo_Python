@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ftservo-python-sdk"
+version = "2.0.1+stablekite.1"
+description = "FEETECH bus servo SDK with validated register response lengths"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["pyserial"]
+
+[project.urls]
+Source = "https://github.com/StableKite/FTServo_Python"
+Upstream = "https://github.com/ftservo/FTServo_Python"
+
+[tool.setuptools]
+packages = ["scservo_sdk"]

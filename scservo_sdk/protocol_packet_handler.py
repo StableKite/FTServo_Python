@@ -321,8 +321,12 @@ class protocol_packet_handler(object):
 
         if result == COMM_SUCCESS and rxpacket[PKT_ID] == scs_id:
             error = rxpacket[PKT_ERROR]
-
-            data.extend(rxpacket[PKT_PARAMETER0 : PKT_PARAMETER0+length])
+            # LENGTH includes ERROR and CHECKSUM, neither of which is payload.
+            # A valid checksum alone does not prove a complete register read.
+            if rxpacket[PKT_LENGTH] != length + 2 or len(rxpacket) != length + 6:
+                result = COMM_RX_CORRUPT
+            else:
+                data.extend(rxpacket[PKT_PARAMETER0 : PKT_PARAMETER0+length])
 
         return data, result, error
 
@@ -342,8 +346,10 @@ class protocol_packet_handler(object):
         rxpacket, result, error = self.txRxPacket(txpacket)
         if result == COMM_SUCCESS:
             error = rxpacket[PKT_ERROR]
-
-            data.extend(rxpacket[PKT_PARAMETER0 : PKT_PARAMETER0+length])
+            if rxpacket[PKT_LENGTH] != length + 2 or len(rxpacket) != length + 6:
+                result = COMM_RX_CORRUPT
+            else:
+                data.extend(rxpacket[PKT_PARAMETER0 : PKT_PARAMETER0+length])
 
         return data, result, error
 
