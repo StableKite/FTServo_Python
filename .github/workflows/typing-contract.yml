@@ -41,8 +41,8 @@ jobs:
           cd "$RUNNER_TEMP/ftservo-consumer"
           flags=()
           if [ '${{ matrix.python }}' = 3.15t ]; then flags+=(--require-free-threaded); fi
-          python "$GITHUB_WORKSPACE/run_native_contracts.py"
-          python "$GITHUB_WORKSPACE/ci_typing_contract.py" "${flags[@]}"
+          python -I "$GITHUB_WORKSPACE/run_native_contracts.py"
+          python -I "$GITHUB_WORKSPACE/ci_typing_contract.py" "${flags[@]}"
           python -m pip check
       - uses: actions/upload-artifact@v7
         if: always()
