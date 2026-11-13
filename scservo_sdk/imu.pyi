@@ -1,7 +1,7 @@
 """Native public interface; implementation and wire behavior are unchanged."""
 from typing import Union as _Union
 from ._interfaces import SyncWriter as _SyncWriter
-from .port_handler import PortHandler as _PortHandler
+from ._interfaces import PacketPort as _PacketPort
 from .scservo_def import *
 from .protocol_packet_handler import *
 from .group_sync_read import *
@@ -35,7 +35,7 @@ IMU_PRESENT_ACC_AZH: int
 
 class imu(protocol_packet_handler):
     groupSyncWrite: _Union[GroupSyncWrite, _SyncWriter]
-    def __init__(self, portHandler: _PortHandler) -> None: ...
+    def __init__(self, portHandler: _PacketPort) -> None: ...
     def readSlfpQxyz(self, scs_id: int) -> tuple[int, int, int, int, int]: ...
     def scs_halffloat(self, h: int) -> float: ...
     def scs_slfp_qw(self, qx: int, qy: int, qz: int) -> float: ...

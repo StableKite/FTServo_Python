@@ -1,6 +1,6 @@
 """Native public interface; implementation and wire behavior are unchanged."""
 from typing import MutableSequence as _MutableSequence, Optional as _Optional, Sequence as _Sequence
-from .port_handler import PortHandler as _PortHandler
+from ._interfaces import PacketPort as _PacketPort
 from .scservo_def import *
 TXPACKET_MAX_LEN: int
 RXPACKET_MAX_LEN: int
@@ -18,9 +18,9 @@ ERRBIT_OVERELE: int
 ERRBIT_OVERLOAD: int
 
 class protocol_packet_handler(object):
-    portHandler: _PortHandler
+    portHandler: _PacketPort
     scs_end: int
-    def __init__(self, portHandler: _PortHandler, protocol_end: int) -> None: ...
+    def __init__(self, portHandler: _PacketPort, protocol_end: int) -> None: ...
     def scs_getend(self) -> int: ...
     def scs_setend(self, e: int) -> None: ...
     def scs_tohost(self, a: int, b: int) -> int: ...

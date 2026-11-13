@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ftservo-python-sdk"
-version = "2.0.1+stablekite.2"
+version = "2.0.1+stablekite.3"
 description = "FEETECH bus servo SDK with validated register response lengths"
 readme = "README.md"
 requires-python = ">=3.9"

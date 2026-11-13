@@ -1,7 +1,7 @@
 """Native public interface; implementation and wire behavior are unchanged."""
 from typing import Union as _Union
 from ._interfaces import SyncWriter as _SyncWriter
-from .port_handler import PortHandler as _PortHandler
+from ._interfaces import PacketPort as _PacketPort
 from .scservo_def import *
 from .protocol_packet_handler import *
 from .group_sync_read import *
@@ -50,7 +50,7 @@ HLS_PRESENT_CURRENT_H: int
 
 class hls(protocol_packet_handler):
     groupSyncWrite: _Union[GroupSyncWrite, _SyncWriter]
-    def __init__(self, portHandler: _PortHandler) -> None: ...
+    def __init__(self, portHandler: _PacketPort) -> None: ...
     def WritePosEx(self, scs_id: int, position: int, speed: int, acc: int, torque: int) -> tuple[int, int]: ...
     def ReadPos(self, scs_id: int) -> tuple[int, int, int]: ...
     def ReadSpeed(self, scs_id: int) -> tuple[int, int, int]: ...

@@ -104,3 +104,42 @@ assert assert_type(reader.getData(1, 17, 2), int) == 0x1234
 reader.data_dict[1] = None
 assert reader.isAvailable(1, 17, 2) == (False, 0)
 assert not port.is_open
+
+
+
+class StructuralPort:
+    """Closed, non-inheriting transport with the Root adapter's port signatures."""
+
+    def __init__(self) -> None:
+        self.is_using = False
+        self.writes: list[bytes] = []
+        self.timeouts: list[int] = []
+
+    def clearPort(self) -> None:
+        pass
+
+    def readPort(self, length: int) -> bytes:
+        return b""[:length]
+
+    def writePort(self, packet: bytes | bytearray | list[int]) -> int:
+        self.writes.append(bytes(packet))
+        return len(packet)
+
+    def setPacketTimeout(self, packet_length: int) -> None:
+        self.timeouts.append(packet_length)
+
+    def isPacketTimeout(self) -> bool:
+        return True
+
+
+structural_port = StructuralPort()
+structural_sms = sms_sts(structural_port)
+structural_scs = scscl(structural_port)
+assert structural_sms.portHandler is structural_port
+assert structural_scs.portHandler is structural_port
+assert not isinstance(structural_port, PortHandler)
+# Run the genuine packet builder and timeout path over the in-memory boundary.
+assert structural_sms.ping(1) == (0, -6, 0)
+assert structural_port.writes == [bytes.fromhex("ffff010201fb")]
+assert structural_port.timeouts == [6]
+assert not structural_port.is_using

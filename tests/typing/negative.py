@@ -60,3 +60,74 @@ class InvalidWriter:
 
 
 sms.groupSyncWrite = InvalidWriter()  # EXPECT_ERROR
+
+
+
+class MissingBusyFlag:
+    def clearPort(self) -> None:
+        pass
+    def readPort(self, length: int) -> bytes:
+        return b""[:length]
+    def writePort(self, packet: list[int] | bytearray) -> int:
+        return len(packet)
+    def setPacketTimeout(self, packet_length: int) -> None:
+        pass
+    def isPacketTimeout(self) -> bool:
+        return True
+
+
+class ReadOnlyBusyFlag(MissingBusyFlag):
+    @property
+    def is_using(self) -> bool:
+        return False
+
+
+class BadReadPort:
+    is_using: bool = False
+    def clearPort(self) -> None:
+        pass
+    def readPort(self, length: int) -> str:
+        return str(length)
+    def writePort(self, packet: list[int] | bytearray) -> int:
+        return len(packet)
+    def setPacketTimeout(self, packet_length: int) -> None:
+        pass
+    def isPacketTimeout(self) -> bool:
+        return True
+
+
+class BadWritePort:
+    is_using: bool = False
+    def clearPort(self) -> None:
+        pass
+    def readPort(self, length: int) -> bytes:
+        return b""[:length]
+    def writePort(self, packet: bytes) -> int:
+        return len(packet)
+    def setPacketTimeout(self, packet_length: int) -> None:
+        pass
+    def isPacketTimeout(self) -> bool:
+        return True
+
+
+class BadTimeoutPort:
+    is_using: bool = False
+    def clearPort(self) -> None:
+        pass
+    def readPort(self, length: int) -> bytes:
+        return b""[:length]
+    def writePort(self, packet: list[int] | bytearray) -> int:
+        return len(packet)
+    def setPacketTimeout(self, packet_length: str) -> None:
+        pass
+    def isPacketTimeout(self) -> bool:
+        return True
+
+
+sms_sts(MissingBusyFlag())  # EXPECT_ERROR
+scscl(ReadOnlyBusyFlag())  # EXPECT_ERROR
+sms_sts(BadReadPort())  # EXPECT_ERROR
+scscl(BadWritePort())  # EXPECT_ERROR
+protocol_packet_handler(BadTimeoutPort(), 0)  # EXPECT_ERROR
+structural_handler = sms_sts(port)
+structural_handler.portHandler = BadReadPort()  # EXPECT_ERROR

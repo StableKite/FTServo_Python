@@ -25,7 +25,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--module", default="scservo_sdk")
     parser.add_argument("--distribution", default="ftservo-python-sdk")
-    parser.add_argument("--version", default="2.0.1+stablekite.2")
+    parser.add_argument("--version", default="2.0.1+stablekite.3")
     parser.add_argument("--require-free-threaded", action="store_true")
     args = parser.parse_args()
     source = Path(__file__).resolve().parent

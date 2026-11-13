@@ -1,7 +1,7 @@
 name: Genuine installed SDK public typing and unopened wire contracts
 on:
   push:
-    branches: [engineering/pep561-public-contract-v1]
+    branches: [engineering/structural-packet-port-v3]
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,9 +29,9 @@ jobs:
         shell: bash
         run: |
           if [ '${{ matrix.form }}' = wheel ]; then
-            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.2-py3-none-any.whl
+            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.3-py3-none-any.whl
           else
-            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.2.tar.gz
+            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.3.tar.gz
           fi
           python -m pip install 'mypy @ git+https://github.com/StableKite/mypy.git@7991846dd80c443bfcbf719f3b53c96d6e2b7f45' 'pyright[nodejs] @ git+https://github.com/StableKite/pyright-python.git@e627b5e8faa9e2dc029c8ac0e7187fd63557ea07'
       - name: Real installed public interfaces and unchanged wire controls
