@@ -1,0 +1,52 @@
+name: Genuine installed SDK public typing and unopened wire contracts
+on:
+  push:
+    branches: [engineering/pep561-public-contract-v1]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installed:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04]
+        python: ["3.13", "3.15t"]
+        form: [wheel, sdist]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build the real distribution
+        run: |
+          python -m pip install build wheel
+          python -m build --wheel --sdist --outdir dist
+      - name: Ordinary install and qualified analyzers
+        shell: bash
+        run: |
+          if [ '${{ matrix.form }}' = wheel ]; then
+            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.2-py3-none-any.whl
+          else
+            python -m pip install dist/ftservo_python_sdk-2.0.1+stablekite.2.tar.gz
+          fi
+          python -m pip install 'mypy @ git+https://github.com/StableKite/mypy.git@7991846dd80c443bfcbf719f3b53c96d6e2b7f45' 'pyright[nodejs] @ git+https://github.com/StableKite/pyright-python.git@e627b5e8faa9e2dc029c8ac0e7187fd63557ea07'
+      - name: Real installed public interfaces and unchanged wire controls
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/ftservo-consumer"
+          cd "$RUNNER_TEMP/ftservo-consumer"
+          flags=()
+          if [ '${{ matrix.python }}' = 3.15t ]; then flags+=(--require-free-threaded); fi
+          python "$GITHUB_WORKSPACE/run_native_contracts.py"
+          python "$GITHUB_WORKSPACE/ci_typing_contract.py" "${flags[@]}"
+          python -m pip check
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: actual-installed-${{ matrix.os }}-${{ matrix.python }}-${{ matrix.form }}
+          path: ${{ runner.temp }}/ftservo-consumer/typing-contract-results
+          if-no-files-found: error

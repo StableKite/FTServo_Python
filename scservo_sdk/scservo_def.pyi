@@ -1,0 +1,22 @@
+"""Native public interface; implementation and wire behavior are unchanged."""
+BROADCAST_ID: int
+MAX_ID: int
+SCS_END: int
+INST_PING: int
+INST_READ: int
+INST_WRITE: int
+INST_REG_WRITE: int
+INST_ACTION: int
+INST_SYNC_WRITE: int
+INST_SYNC_READ: int
+INST_RESET: int
+INST_OFSCAL: int
+COMM_SUCCESS: int
+COMM_PORT_BUSY: int
+COMM_TX_FAIL: int
+COMM_RX_FAIL: int
+COMM_TX_ERROR: int
+COMM_RX_WAITING: int
+COMM_RX_TIMEOUT: int
+COMM_RX_CORRUPT: int
+COMM_NOT_AVAILABLE: int

@@ -1,0 +1,5 @@
+include README.md LICENSE pyproject.toml MANIFEST.in
+include ci_typing_contract.py
+include run_native_contracts.py
+recursive-include scservo_sdk *.py *.pyi py.typed
+recursive-include tests *.py
